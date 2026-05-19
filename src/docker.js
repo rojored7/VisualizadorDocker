@@ -1,6 +1,24 @@
 const Docker = require('dockerode');
+const fs = require('fs');
 
-const docker = new Docker();
+function createDockerClient() {
+  const pipes = [
+    '//./pipe/dockerDesktopLinuxEngine',
+    '//./pipe/docker_engine',
+  ];
+
+  for (const pipe of pipes) {
+    try {
+      if (fs.existsSync(pipe)) {
+        return new Docker({ socketPath: pipe });
+      }
+    } catch (_) {}
+  }
+
+  return new Docker();
+}
+
+const docker = createDockerClient();
 
 function calculateCpuPercent(stats) {
   const cpuDelta =
