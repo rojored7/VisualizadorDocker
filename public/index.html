@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VisualizadorDocker</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="header__title">VisualizadorDocker</h1>
+    <div class="header__status" id="connectionStatus">Conectando...</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tabs__btn tabs__btn--active" data-tab="containers">Contenedores</button>
+    <button class="tabs__btn" data-tab="images">Imagenes</button>
+    <button class="tabs__btn" data-tab="volumes">Volumenes</button>
+    <button class="tabs__btn" data-tab="system">Sistema</button>
+  </nav>
+
+  <main class="main">
+    <!-- TAB: CONTENEDORES -->
+    <section class="tab-content tab-content--active" id="tab-containers">
+      <div class="summary-bar" id="containerSummary">
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">Running</span>
+          <span class="summary-bar__value" id="runningCount">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">Stopped</span>
+          <span class="summary-bar__value" id="stoppedCount">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">CPU</span>
+          <span class="summary-bar__value" id="totalCpu">-</span>
+        </div>
+        <div class="summary-bar__item summary-bar__item--wide">
+          <span class="summary-bar__label">RAM</span>
+          <span class="summary-bar__value" id="totalMem">-</span>
+          <div class="progress-bar">
+            <div class="progress-bar__fill" id="totalMemBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn filter-btn--active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="running">Running</button>
+        <button class="filter-btn" data-filter="stopped">Stopped</button>
+        <select class="filter-select" id="stackFilter">
+          <option value="all">Todos los stacks</option>
+        </select>
+      </div>
+
+      <div class="card-grid" id="containerGrid"></div>
+    </section>
+
+    <!-- TAB: IMAGENES -->
+    <section class="tab-content" id="tab-images">
+      <div class="summary-bar" id="imageSummary">
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">Total</span>
+          <span class="summary-bar__value" id="imageCount">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">En uso</span>
+          <span class="summary-bar__value" id="imageInUse">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">Disco</span>
+          <span class="summary-bar__value" id="imageDisk">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <button class="btn btn--warning" id="pruneImagesBtn">Limpiar sin usar</button>
+        </div>
+      </div>
+      <div class="card-grid" id="imageGrid"></div>
+    </section>
+
+    <!-- TAB: VOLUMENES -->
+    <section class="tab-content" id="tab-volumes">
+      <div class="summary-bar" id="volumeSummary">
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">Total</span>
+          <span class="summary-bar__value" id="volumeCount">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">Huerfanos</span>
+          <span class="summary-bar__value" id="volumeOrphans">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <span class="summary-bar__label">Anonimos</span>
+          <span class="summary-bar__value" id="volumeAnonymous">-</span>
+        </div>
+        <div class="summary-bar__item">
+          <button class="btn btn--warning" id="pruneVolumesBtn">Limpiar huerfanos</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn filter-btn--active" data-vfilter="all">Todos</button>
+        <button class="filter-btn" data-vfilter="named">Nombrados</button>
+        <button class="filter-btn" data-vfilter="anonymous">Anonimos</button>
+        <button class="filter-btn" data-vfilter="orphan">Huerfanos</button>
+      </div>
+
+      <div class="card-grid" id="volumeGrid"></div>
+    </section>
+
+    <!-- TAB: SISTEMA -->
+    <section class="tab-content" id="tab-system">
+      <div class="system-overview" id="systemOverview">
+        <div class="system-loading">Cargando datos del sistema...</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL DE IMPACTO -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="impactModal">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Analisis de Impacto</h2>
+        <button class="modal__close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer" id="modalFooter"></div>
+    </div>
+  </div>
+
+  <!-- PANEL DE LOGS -->
+  <div class="logs-panel" id="logsPanel">
+    <div class="logs-panel__header">
+      <span class="logs-panel__title" id="logsPanelTitle">Logs</span>
+      <button class="logs-panel__close" id="logsPanelClose">&times;</button>
+    </div>
+    <pre class="logs-panel__content" id="logsPanelContent"></pre>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
